@@ -471,7 +471,7 @@
     const img = new Image();
     img.onload = function() {
       const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 400;
+      const MAX_WIDTH = 800; // চওড়া বাড়িয়ে ৮০০ পিক্সেল করা হলো যাতে ডিটেইল নষ্ট না হয়
       let width = img.width;
       let height = img.height;
 
@@ -485,13 +485,15 @@
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.65);
+      // কোয়ালিটি ০.৮৫ রাখা হয়েছে, এতে ছবির সাইজ প্রায় ১২০-১৫০ KB এবং স্পষ্ট থাকবে
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
       document.getElementById("customImageBase64").value = compressedDataUrl;
     };
     img.src = event.target.result;
   };
   reader.readAsDataURL(file);
-    }
+}
+
     
 
     function saveCustomFood() {
