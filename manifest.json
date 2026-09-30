@@ -1,17 +1,24 @@
 {
   "name": "মহা পেটুক বিলিং",
   "short_name": "মহা পেটুক",
+  "description": "মহা পেটুক ফাস্ট ফুড অফলাইন বিলিং ও সেলস খাতা",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#f59e0b",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "logo.png",
-      "sizes": "192x192 512x512",
+      "src": "banner.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "banner.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
