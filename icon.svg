@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#271406" />
+      <stop offset="100%" stop-color="#121212" />
+    </linearGradient>
+    <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+  <!-- Background circle with safe-zone margin -->
+  <rect width="512" height="512" rx="108" fill="url(#bg)" />
+  <circle cx="256" cy="256" r="236" fill="none" stroke="#f59e0b" stroke-width="6" opacity="0.3" />
+  
+  <!-- Outer glowing emblem -->
+  <circle cx="256" cy="256" r="185" fill="#1c1611" stroke="#f59e0b" stroke-width="8" />
+  
+  <!-- Food / Chef / Cloche Icon -->
+  <g transform="translate(136, 126)">
+    <!-- Cloche dome -->
+    <path d="M 120 40 A 100 90 0 0 1 220 130 L 20 130 A 100 90 0 0 1 120 40 Z" fill="url(#amberGrad)" />
+    <!-- Cloche knob -->
+    <circle cx="120" cy="30" r="16" fill="#fef3c7" stroke="#b45309" stroke-width="4" />
+    <!-- Platter tray -->
+    <rect x="0" y="132" width="240" height="24" rx="12" fill="#fef3c7" />
+    <!-- Steam waves -->
+    <path d="M 80 15 Q 85 0 80 -15" stroke="#f59e0b" stroke-width="6" fill="none" stroke-linecap="round" />
+    <path d="M 120 10 Q 125 -5 120 -20" stroke="#f59e0b" stroke-width="6" fill="none" stroke-linecap="round" />
+    <path d="M 160 15 Q 165 0 160 -15" stroke="#f59e0b" stroke-width="6" fill="none" stroke-linecap="round" />
+  </g>
+
+  <!-- Bengali Brand Text inside icon -->
+  <text x="256" y="345" font-family="'Hind Siliguri', sans-serif" font-size="44" font-weight="900" fill="#fef3c7" text-anchor="middle" letter-spacing="1">মহা পেটুক</text>
+  <text x="256" y="380" font-family="sans-serif" font-size="16" font-weight="700" fill="#f59e0b" text-anchor="middle" letter-spacing="3">BILLING POS</text>
+</svg>
