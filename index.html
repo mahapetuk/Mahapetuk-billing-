@@ -1,31 +1,271 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>মহা পেটুক বিলিং কাউন্টার - Mahapetuk Fast Food Billing POS</title>
-    <meta name="description" content="মহা পেটুক (আমতা সাহাপাড়া বাজার) ফাস্ট ফুড অফলাইন বিলিং ও সেলস খাতা - Fast Food POS, Instant Thermal Billing, UPI QR, & Sales Ledger." />
-    <meta property="og:title" content="মহা পেটুক বিলিং কাউন্টার - Mahapetuk Fast Food Billing POS" />
-    <meta property="og:description" content="মহা পেটুক (আমতা সাহাপাড়া বাজার) ফাস্ট ফুড অফলাইন বিলিং ও সেলস খাতা - Fast Food POS, Instant Thermal Billing, UPI QR, & Sales Ledger." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#f59e0b" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="মহা পেটুক" />
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
-    <link rel="shortcut icon" href="./favicon.ico" />
-    <link rel="manifest" href="./manifest.json" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-DnVZJVMt.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-C-U_jmgg.css">
-  <link rel="manifest" href="./manifest.webmanifest"></head>
-  <body class="bg-[#121212] text-zinc-100 antialiased selection:bg-amber-500 selection:text-black">
-    <div id="root"></div>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>মহা পেটুক বিলিং কাউন্টার</title>
+  <meta name="theme-color" content="#f59e0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --primary: #f59e0b; --bg: #121212; --card: #1c1c1e; --text: #ffffff; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; }
+    .top-nav { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 12px 16px; position: sticky; top: 0; z-index: 999; border-bottom: 1px solid #333; }
+    .brand { font-size: 18px; font-weight: 800; color: var(--primary); }
+    .nav-btns { display: flex; gap: 8px; }
+    .btn-top { background: #27272a; border: 1px solid #444; color: #fff; padding: 6px 12px; font-size: 13px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+    
+    .hero { text-align: center; padding: 15px; background: #18181b; border-bottom: 1px solid #27272a; }
+    .hero h1 { font-size: 26px; color: #fff; }
+    .hero p { font-size: 13px; color: var(--primary); font-weight: 600; }
+    .summary-badge { display: inline-block; background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; color: #4ade80; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-top: 8px; }
 
+    .controls { padding: 12px 15px; max-width: 800px; margin: 0 auto; }
+    .search-box { width: 100%; padding: 12px; background: var(--card); border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 15px; outline: none; margin-bottom: 10px; }
+    .cat-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+    .cat-pill { white-space: nowrap; padding: 6px 14px; background: #27272a; border: 1px solid #444; color: #bbb; border-radius: 16px; font-size: 13px; cursor: pointer; }
+    .cat-pill.active { background: var(--primary); color: #000; font-weight: bold; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 0 15px; max-width: 800px; margin: 0 auto; }
+    .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #27272a; display: flex; flex-direction: column; }
+    .card img { width: 100%; height: 120px; object-fit: cover; background: #222; }
+    .card-body { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+    .card-title { font-size: 15px; font-weight: bold; margin-bottom: 4px; }
+    .card-price { color: var(--primary); font-weight: 800; font-size: 15px; margin-bottom: 8px; }
+    .btn-add { background: #2563eb; color: #fff; border: none; padding: 8px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; }
+    .btn-add:active { transform: scale(0.95); }
+
+    .cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #1c1c1e; border-top: 2px solid var(--primary); padding: 12px 16px; display: none; justify-content: space-between; align-items: center; z-index: 1000; }
+    .btn-checkout { background: #087f5b; color: #fff; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
+
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
+    .modal-content { background: #fff; color: #000; width: 100%; max-width: 420px; border-radius: 12px; padding: 16px; max-height: 90vh; overflow-y: auto; }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #444; padding-bottom: 8px; margin-bottom: 12px; }
+    .btn-close { background: #fee2e2; color: #dc2626; border: 1px solid #dc2626; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; cursor: pointer; }
+    
+    .pay-btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .btn-cash { background: #087f5b; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    .btn-online { background: #2563eb; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <div class="top-nav">
+    <div class="brand">মহা পেটুক বিলিং</div>
+    <div class="nav-btns">
+      <button class="btn-top" onclick="openModal('historyModal')">হিস্ট্রি</button>
+      <button class="btn-top" style="color:var(--primary);" onclick="openModal('customModal')">+ খাবার</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>মহা পেটুক</h1>
+    <p>আমতা সাহাপাড়া বাজার</p>
+    <div class="summary-badge" id="todaySummary">আজকের বিক্রি: হিসাব হচ্ছে...</div>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" class="search-box" placeholder="খাবারের নাম দিয়ে খুঁজুন..." oninput="render()">
+    <div class="cat-bar" id="catBar"></div>
+  </div>
+
+  <div class="grid" id="menuGrid"></div>
+
+  <div class="cart-bar" id="cartBar">
+    <div>
+      <div id="cartCount" style="font-size:12px; color:#aaa;">০ টি আইটেম</div>
+      <div id="cartTotal" style="font-size:17px; font-weight:800; color:var(--primary);">মোট: ₹০</div>
+    </div>
+    <button class="btn-checkout" onclick="openModal('receiptModal')">বিল মেমো দেখুন</button>
+  </div>
+
+  <!-- মেমো মোডাল -->
+  <div class="modal" id="receiptModal">
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3>মহা পেটুক - মেমো</h3>
+        <button class="btn-close" onclick="closeModal('receiptModal')">✕</button>
+      </div>
+      <div id="billItems" style="border-bottom:1px dashed #999; padding-bottom:8px;"></div>
+      <div style="font-size:17px; font-weight:bold; display:flex; justify-content:space-between; margin:12px 0;">
+        <span>মোট বিল:</span>
+        <span id="billGrandTotal" style="color:#dc2626;">₹০</span>
+      </div>
+      <div class="pay-btn-group">
+        <button class="btn-cash" onclick="pay('cash')">💵 ক্যাশ</button>
+        <button class="btn-online" onclick="pay('online')">📱 অনলাইন</button>
+      </div>
+      <button onclick="clearCart()" style="width:100%; margin-top:8px; padding:6px; background:#f4f4f5; border:1px solid #ccc; border-radius:6px; font-weight:bold;">কার্ট খালি করুন</button>
+    </div>
+  </div>
+
+  <!-- কাস্টম খাবার যোগ -->
+  <div class="modal" id="customModal">
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3>নতুন খাবার যোগ করুন</h3>
+        <button class="btn-close" onclick="closeModal('customModal')">✕</button>
+      </div>
+      <input type="text" id="foodName" placeholder="খাবারের নাম" style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
+      <input type="text" id="foodCat" placeholder="ক্যাটাগরি (যেমন: Roll, Chow)" style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
+      <input type="number" id="foodPrice" placeholder="দাম (₹)" style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
+      <input type="file" id="foodImgFile" accept="image/*" onchange="compressImg(event)" style="margin-bottom:8px;">
+      <input type="hidden" id="foodImgBase64">
+      <button onclick="saveFood()" style="width:100%; padding:10px; background:#087f5b; color:#fff; border:none; border-radius:6px; font-weight:bold;">সেভ করুন</button>
+    </div>
+  </div>
+
+  <!-- হিস্ট্রি মোডাল -->
+  <div class="modal" id="historyModal">
+    <div class="modal-content">
+      <div class="modal-head">
+        <h3>বিক্রির খাতা ও হিস্ট্রি</h3>
+        <button class="btn-close" onclick="closeModal('historyModal')">✕</button>
+      </div>
+      <div id="historyStat" style="background:#f4f4f5; padding:8px; border-radius:6px; margin-bottom:10px; font-size:13px; font-weight:bold;"></div>
+      <div id="historyList" style="max-height:300px; overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <script>
+    const KEY = "MP_POS_DATA";
+    const defaults = {
+      menu: [
+        { id: 1, name: "চিকেন চাউমিন", cat: "Chow", price: 100, img: "" },
+        { id: 2, name: "এগ চিকেন রোল", cat: "Roll", price: 60, img: "" },
+        { id: 3, name: "চিকেন পকোড়া", cat: "Snacks", price: 90, img: "" },
+        { id: 4, name: "চিকেন ললিপপ", cat: "Snacks", price: 130, img: "" }
+      ],
+      sales: []
+    };
+
+    let data = JSON.parse(localStorage.getItem(KEY)) || defaults;
+    let cart = [];
+    let curCat = "ALL";
+
+    function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
+
+    function render() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const cats = ["ALL", ...new Set(data.menu.map(m => m.cat || "General"))];
+      
+      document.getElementById("catBar").innerHTML = cats.map(c => `
+        <button class="cat-pill ${c === curCat ? 'active' : ''}" onclick="curCat='${c}'; render();">${c === 'ALL' ? 'সব খাবার' : c}</button>
+      `).join("");
+
+      const filtered = data.menu.filter(f => (curCat === "ALL" || f.cat === curCat) && f.name.toLowerCase().includes(search));
+      document.getElementById("menuGrid").innerHTML = filtered.map(f => `
+        <div class="card">
+          <img src="${f.img || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect fill=%22%23222%22 width=%22100%22 height=%22100%22/><text fill=%22%23666%22 x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2220%22>🍽️</text></svg>'">
+          <div class="card-body">
+            <div class="card-title">${f.name}</div>
+            <div class="card-price">₹${f.price}</div>
+            <button class="btn-add" onclick="addToCart(${f.id})">+ যোগ করুন</button>
+          </div>
+        </div>
+      `).join("");
+
+      updateToday();
+    }
+
+    function addToCart(id) {
+      const item = data.menu.find(m => m.id === id);
+      const ex = cart.find(c => c.id === id);
+      if (ex) ex.qty++; else cart.push({ ...item, qty: 1 });
+      updateCart();
+    }
+
+    function updateCart() {
+      const totalCount = cart.reduce((s, i) => s + i.qty, 0);
+      const totalAmt = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+      document.getElementById("cartBar").style.display = totalCount > 0 ? "flex" : "none";
+      document.getElementById("cartCount").textContent = `${totalCount} টি আইটেম`;
+      document.getElementById("cartTotal").textContent = `মোট: ₹${totalAmt}`;
+    }
+
+    function pay(method) {
+      if (!cart.length) return;
+      const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+      data.sales.unshift({ id: Date.now(), items: [...cart], total, method, date: new Date().toISOString() });
+      save();
+      alert(`✅ ₹${total} বিল সম্পন্ন হয়েছে (${method === 'cash' ? 'ক্যাশ' : 'অনলাইন'})`);
+      clearCart();
+    }
+
+    function clearCart() { cart = []; updateCart(); closeModal('receiptModal'); }
+
+    function updateToday() {
+      const today = new Date().toISOString().slice(0, 10);
+      const sales = data.sales.filter(s => s.date.slice(0, 10) === today);
+      const sum = sales.reduce((s, a) => s + a.total, 0);
+      document.getElementById("todaySummary").textContent = `আজকের বিক্রি: ${sales.length} টি বিল • মোট: ₹${sum}`;
+    }
+
+    function compressImg(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const cvs = document.createElement("canvas");
+          const W = 600;
+          cvs.width = W;
+          cvs.height = Math.round((img.height * W) / img.width);
+          cvs.getContext("2d").drawImage(img, 0, 0, cvs.width, cvs.height);
+          document.getElementById("foodImgBase64").value = cvs.toDataURL("image/jpeg", 0.8);
+        };
+        img.src = evt.target.result;
+      };
+      r.readAsDataURL(file);
+    }
+
+    function saveFood() {
+      const name = document.getElementById("foodName").value.trim();
+      const price = Number(document.getElementById("foodPrice").value);
+      const cat = document.getElementById("foodCat").value.trim() || "General";
+      const img = document.getElementById("foodImgBase64").value;
+      if (!name || !price) { alert("নাম ও দাম দিন"); return; }
+      data.menu.push({ id: Date.now(), name, cat, price, img });
+      save();
+      render();
+      closeModal("customModal");
+    }
+
+    function openModal(id) {
+      if (id === 'receiptModal') {
+        const amt = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+        document.getElementById("billGrandTotal").textContent = "₹" + amt;
+        document.getElementById("billItems").innerHTML = cart.map(i => `
+          <div style="display:flex; justify-content:space-between; margin:6px 0; font-size:13px;">
+            <span>${i.name} × ${i.qty}</span>
+            <b>₹${i.price * i.qty}</b>
+          </div>
+        `).join("");
+      }
+      if (id === 'historyModal') {
+        const today = new Date().toISOString().slice(0, 10);
+        const sales = data.sales.filter(s => s.date.slice(0, 10) === today);
+        const sum = sales.reduce((s, a) => s + a.total, 0);
+        document.getElementById("historyStat").innerHTML = `আজকের মোট বিক্রি: ₹${sum} (${sales.length} টি বিল)`;
+        document.getElementById("historyList").innerHTML = data.sales.map(s => `
+          <div style="border-bottom:1px solid #ddd; padding:6px 0; font-size:12px;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold;">
+              <span>${new Date(s.date).toLocaleTimeString('bn-IN')}</span>
+              <span style="color:#087f5b;">₹${s.total} (${s.method})</span>
+            </div>
+            <div style="color:#666;">${s.items.map(i => `${i.name}×${i.qty}`).join(", ")}</div>
+          </div>
+        `).join("") || "<div style='color:#999; text-align:center;'>কোনো রেকর্ড নেই</div>";
+      }
+      document.getElementById(id).style.display = "flex";
+    }
+
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+    render();
+  </script>
+</body>
+</html>
