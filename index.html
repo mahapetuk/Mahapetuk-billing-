@@ -15,7 +15,7 @@
   <style>
     :root {
       --primary: #f59e0b;
-      --bg: #121212;
+      --bg: #121214;
       --card-bg: #1e1e24;
       --surface: #282830;
       --text: #f4f4f5;
@@ -25,7 +25,7 @@
       --blue: #3b82f6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Hind Siliguri', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg); color: var(--text); padding-bottom: 110px; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 120px; overflow-x: hidden; }
 
     /* Top Bar */
     .top-bar { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 12px 16px; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid #333; }
@@ -34,19 +34,28 @@
     .btn-action { background: var(--surface); color: #fff; border: 1px solid #444; padding: 7px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 
     /* Summary Bar */
-    .hero-summary { background: linear-gradient(180deg, #1c1917 0%, #121212 100%); padding: 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .hero-summary { background: linear-gradient(180deg, #1c1917 0%, #121214 100%); padding: 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .shop-name { font-size: 24px; font-weight: 800; color: #fff; }
     .shop-loc { font-size: 13px; color: var(--primary); margin-bottom: 8px; }
     .daily-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: #6ee7b7; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; }
 
-    /* Filters */
+    /* Filters & Two-Tier Avatars */
     .filter-section { max-width: 900px; margin: 12px auto; padding: 0 14px; }
-    .search-input { width: 100%; padding: 12px 14px; background: var(--card-bg); border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 15px; outline: none; margin-bottom: 10px; }
+    .search-input { width: 100%; padding: 12px 14px; background: var(--card-bg); border: 1px solid #333; border-radius: 10px; color: #fff; font-size: 15px; outline: none; margin-bottom: 12px; }
     .search-input:focus { border-color: var(--primary); }
-    .cats-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+    
+    .section-label { font-size: 12px; font-weight: 700; color: #d1d5db; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .cats-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; margin-bottom: 10px; }
     .cats-scroll::-webkit-scrollbar { display: none; }
-    .cat-btn { padding: 6px 14px; background: var(--surface); border: 1px solid #444; border-radius: 20px; color: var(--muted); font-size: 13px; font-weight: bold; white-space: nowrap; cursor: pointer; }
-    .cat-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+
+    .cat-avatar-pill { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; flex-shrink: 0; }
+    .cat-avatar-circle { width: 54px; height: 54px; border-radius: 50%; border: 2px solid #444; overflow: hidden; background: #26262e; display: flex; align-items: center; justify-content: center; position: relative; }
+    .cat-avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .cat-avatar-title { font-size: 11px; font-weight: 700; color: var(--muted); text-align: center; max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cat-avatar-pill.active .cat-avatar-circle { border-color: var(--primary); box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+    .cat-avatar-pill.active .cat-avatar-title { color: var(--primary); }
+    .rank-tag { position: absolute; top: 0; right: 0; background: var(--danger); color: #fff; font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 8px; border: 1px solid #000; }
+    .sold-tag { font-size: 10px; color: #10b981; font-weight: bold; }
 
     /* Product Grid */
     .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; max-width: 900px; margin: 0 auto; padding: 0 14px; }
@@ -75,25 +84,39 @@
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #444; padding-bottom: 10px; margin-bottom: 12px; }
     .btn-modal-close { background: #fee2e2; color: var(--danger); border: 2px solid var(--danger); width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; }
 
-    /* Cart / Memo items */
+    /* Memo Items */
     .memo-row { display: flex; justify-content: space-between; align-items: center; background: #f4f4f5; padding: 8px 10px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; }
     .qty-btn { width: 28px; height: 28px; border: 1px solid #ccc; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
+    /* Change Calculator */
+    .calc-box { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px; margin: 10px 0; }
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; }
+    .calc-input { width: 100%; padding: 8px; border: 1px solid #6ee7b7; border-radius: 6px; font-size: 14px; font-weight: bold; outline: none; }
+    .calc-ret-val { font-size: 14px; font-weight: 800; color: #047857; text-align: right; }
+
+    /* Split Inputs */
+    .split-box { background: #f1f5f9; border-radius: 8px; padding: 10px; margin: 10px 0; border: 1px solid #cbd5e1; }
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .split-col label { display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 3px; }
+    .split-col input { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: bold; outline: none; }
+
     /* UPI QR Display */
-    .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; margin: 12px 0; }
-    #qrcode { margin-bottom: 8px; }
+    .qr-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; margin: 10px 0; }
+    #qrcode { margin-bottom: 6px; }
 
     /* Action Buttons */
     .grid-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-    .btn-pay-c { background: #059669; color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
-    .btn-pay-o { background: var(--blue); color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; }
+    .btn-pay-c { background: #059669; color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; }
+    .btn-pay-o { background: var(--blue); color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: bold; font-size: 13px; cursor: pointer; }
+    .btn-pay-s { grid-column: span 2; background: #d97706; color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer; }
     .btn-print { grid-column: span 2; background: #18181b; color: #fff; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
-    /* Thermal Bill Print Styling */
+    /* Thermal Bill Print */
     @media print {
+      @page { size: 58mm auto; margin: 0; }
       body * { visibility: hidden; }
       #printableThermalBill, #printableThermalBill * { visibility: visible; }
-      #printableThermalBill { position: absolute; left: 0; top: 0; width: 58mm; padding: 2mm; font-family: 'Courier New', monospace; color: #000; font-size: 11px; }
+      #printableThermalBill { position: absolute; left: 0; top: 0; width: 58mm; padding: 2mm 3mm; font-family: 'Courier New', monospace; color: #000; font-size: 11px; display: block !important; }
     }
   </style>
 </head>
@@ -117,9 +140,18 @@
     </div>
   </div>
 
-  <!-- Search & Category -->
+  <!-- Dual-Tier Popups & Search -->
   <div class="filter-section">
     <input type="text" id="searchInput" class="search-input" placeholder="খাবারের নাম দিয়ে সার্চ করুন..." oninput="renderApp()">
+    
+    <!-- সারি ১: আজকের সবচেয়ে বেশি বিক্রি হওয়া খাবার -->
+    <div class="section-label"><i class="fa-solid fa-fire" style="color:#ef4444;"></i> আজকের সর্বাধিক বিক্রিত খাবার (Top to Low)</div>
+    <div class="cats-scroll" id="topSellingBar">
+      <div style="font-size:12px; color:#888; padding:6px;">আজ এখনো কোনো বিক্রি হয়নি</div>
+    </div>
+
+    <!-- সারি ২: ক্যাটাগরি মেনু পপ-আপ -->
+    <div class="section-label"><i class="fa-solid fa-layer-group" style="color:var(--primary);"></i> মেনু ক্যাটাগরি</div>
     <div class="cats-scroll" id="categoryScroll"></div>
   </div>
 
@@ -130,12 +162,12 @@
   <div class="floating-bar" id="floatingCart">
     <div>
       <div class="cart-summary" id="cartItemCount">০ টি আইটেম</div>
-      <div class="cart-total-price" id="cartTotalPrice">₹০</div>
+      <div class="cart-total-price" id="cartTotalPrice">মোট: ₹০</div>
     </div>
     <button class="btn-open-bill" onclick="openBillModal()"><i class="fa-solid fa-receipt"></i> মেমো ও পেমেন্ট</button>
   </div>
 
-  <!-- Billing Modal (Thermal + UPI QR) -->
+  <!-- Billing Modal -->
   <div class="modal-wrap" id="billModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -143,31 +175,59 @@
         <button class="btn-modal-close" onclick="closeModal('billModal')">✕</button>
       </div>
 
-      <div id="memoItemsList" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;"></div>
+      <div id="memoItemsList" style="max-height: 150px; overflow-y: auto; margin-bottom: 8px;"></div>
 
-      <div style="display:flex; justify-content:space-between; font-size: 18px; font-weight:800; border-top:2px dashed #999; padding-top:8px;">
+      <div style="display:flex; justify-content:space-between; font-size: 18px; font-weight:800; border-top:2px dashed #999; padding-top:6px;">
         <span>সর্বমোট বিল:</span>
         <span id="memoGrandTotal" style="color:var(--danger);">₹০</span>
       </div>
 
+      <!-- ক্যাশ ফেরত ক্যালকুলেটর -->
+      <div class="calc-box">
+        <div style="font-size:11px; font-weight:bold; color:#065f46; margin-bottom:4px;"><i class="fa-solid fa-calculator"></i> ক্যাশ দেওয়া ও ফেরত হিসাব ক্যালকুলেটর:</div>
+        <div class="calc-grid">
+          <input type="number" id="inpTenderedCash" class="calc-input" placeholder="কাস্টমার দিল (₹)" oninput="calcChange()">
+          <div class="calc-ret-val" id="lblChangeReturn">ফেরত: ₹০.০০</div>
+        </div>
+      </div>
+
+      <!-- ক্যাশ ও অনলাইন স্প্লিট পেমেন্ট বক্স -->
+      <div class="split-box">
+        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:bold; color:#475569; margin-bottom:4px;">
+          <span>ক্যাশ ও অনলাইন ভাগ করে পেমেন্ট:</span>
+          <span id="lblSplitStatus" style="color:#059669;">বাকি: ₹০</span>
+        </div>
+        <div class="split-grid">
+          <div class="split-col">
+            <label>ক্যাশ পরিমাণ (₹)</label>
+            <input type="number" id="inpCashPart" value="0" oninput="onSplitChange()">
+          </div>
+          <div class="split-col">
+            <label>অনলাইন পরিমাণ (₹)</label>
+            <input type="number" id="inpOnlinePart" value="0" oninput="onSplitChange()">
+          </div>
+        </div>
+      </div>
+
       <!-- UPI QR Code Section -->
       <div class="qr-container">
-        <div style="font-size:12px; font-weight:bold; margin-bottom:6px; color:#475569;">UPI QR কোড স্ক্যান করে পেমেন্ট করুন</div>
+        <div style="font-size:11px; font-weight:bold; margin-bottom:4px; color:#475569;">UPI QR কোড স্ক্যান করে পেমেন্ট করুন</div>
         <div id="qrcode"></div>
-        <div style="font-size:11px; color:#64748b;" id="upiIdNote">UPI: mahapetuk@upi</div>
+        <div style="font-size:10px; color:#64748b;" id="upiIdNote">UPI: mahapetuk@upi</div>
       </div>
 
       <!-- Action Buttons -->
       <div class="grid-btns">
-        <button class="btn-pay-c" onclick="settleSale('Cash')">💵 ক্যাশ বিল</button>
-        <button class="btn-pay-o" onclick="settleSale('Online')">📱 অনলাইন বিল</button>
-        <button class="btn-print" onclick="printThermal()"><i class="fa-solid fa-print"></i> থার্মাল রসিদ প্রিন্ট করুন</button>
+        <button class="btn-pay-c" onclick="settleSale('Cash')">💵 ১০০% ক্যাশ</button>
+        <button class="btn-pay-o" onclick="settleSale('Online')">📱 ১০০% অনলাইন</button>
+        <button class="btn-pay-s" onclick="settleSale('Split')">⚡ ক্যাশ + অনলাইন একসাথে</button>
+        <button class="btn-print" onclick="printThermal()"><i class="fa-solid fa-print"></i> থার্মাল রসিদ প্রিন্ট / PDF</button>
       </div>
       <button onclick="clearCurrentCart()" style="width:100%; margin-top:8px; padding:6px; background:#f4f4f5; border:1px solid #ddd; border-radius:6px; font-weight:bold;">কার্ট খালি করুন</button>
     </div>
   </div>
 
-  <!-- Sales Ledger Modal -->
+  <!-- Sales Ledger Modal with Excel Download -->
   <div class="modal-wrap" id="ledgerModal">
     <div class="modal-box" style="max-width: 480px;">
       <div class="modal-header">
@@ -178,11 +238,11 @@
       <div style="display:flex; gap:6px; margin-bottom:10px;">
         <input type="date" id="ledgerDate" style="flex:1; padding:6px; border:1px solid #ccc; border-radius:6px;" onchange="renderLedger()">
         <button onclick="document.getElementById('ledgerDate').value=''; renderLedger();" style="padding:6px 10px; background:#333; color:#fff; border:none; border-radius:6px; font-size:12px;">সব</button>
-        <button onclick="exportData()" style="padding:6px 10px; background:#059669; color:#fff; border:none; border-radius:6px; font-size:12px;"><i class="fa-solid fa-download"></i></button>
+        <button onclick="exportToExcelCSV()" style="padding:6px 12px; background:#059669; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;" title="বিগত রেকর্ড Excel/CSV হিসেবে ডাউনলোড করুন"><i class="fa-solid fa-file-excel"></i> এক্সেল ডাউনলোড</button>
       </div>
 
       <div id="ledgerStats" style="background:#f1f5f9; padding:8px; border-radius:8px; font-size:13px; font-weight:bold; margin-bottom:10px;"></div>
-      <div id="ledgerRecords" style="max-height: 320px; overflow-y: auto;"></div>
+      <div id="ledgerRecords" style="max-height: 300px; overflow-y: auto;"></div>
     </div>
   </div>
 
@@ -193,18 +253,22 @@
         <h3 style="font-weight:800;">খাবার যোগ / এডিট</h3>
         <button class="btn-modal-close" onclick="closeModal('foodModal')">✕</button>
       </div>
-      <input type="hidden" id="editItemId">
+      <input type="hidden" id="editItemId" value="">
       <input type="text" id="inpName" placeholder="খাবারের নাম" style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
       <input type="text" id="inpCat" placeholder="ক্যাটাগরি (যেমন: Roll, Chow)" style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
       <div style="display:flex; gap:6px;">
         <input type="number" id="inpHalf" placeholder="হাফ দাম (₹)" style="flex:1; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
         <input type="number" id="inpFull" placeholder="ফুল দাম (₹)" style="flex:1; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
       </div>
-      <input type="file" id="inpImg" accept="image/*" onchange="processImage(event)" style="margin-bottom:8px;">
+      <label style="font-size:11px; color:#666; font-weight:bold;">খাবারের ছবি আপলোড (৬০+ ছবির জন্য অপ্টিমাইজড):</label>
+      <input type="file" id="inpImg" accept="image/*" onchange="processImage(event)" style="margin-bottom:8px; width:100%;">
       <input type="hidden" id="inpImgBase64">
-      <button onclick="saveFoodItem()" style="width:100%; padding:10px; background:var(--primary); color:#000; border:none; border-radius:8px; font-weight:800;">মেনুতে সেভ করুন</button>
+      <div style="display:flex; gap:6px;">
+        <button id="btnSaveFood" onclick="saveFoodItem()" style="flex:1; padding:10px; background:var(--primary); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer;">মেনুতে সেভ করুন</button>
+        <button id="btnCancelEdit" onclick="resetFoodForm()" style="display:none; padding:10px; background:#475569; color:#fff; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">বাতিল</button>
+      </div>
 
-      <div id="foodListManage" style="max-height: 200px; overflow-y: auto; margin-top: 14px; border-top:1px solid #ddd; padding-top:10px;"></div>
+      <div id="foodListManage" style="max-height: 180px; overflow-y: auto; margin-top: 14px; border-top:1px solid #ddd; padding-top:10px;"></div>
     </div>
   </div>
 
@@ -212,9 +276,59 @@
   <div id="printableThermalBill" style="display:none;"></div>
 
   <script>
-    const STORE_KEY = "MahaPetuk_Unified_POS_v4";
+    /* =======================================================
+       1. IndexedDB High-Capacity Storage System
+       Allows 60-100+ images (100KB-300KB each) without quota limits
+       ======================================================= */
+    const DB_NAME = "MahaPetuk_ImgDB";
+    const DB_VERSION = 1;
+    let imgDb;
+
+    function initImageDB() {
+      return new Promise((resolve) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains("itemImages")) {
+            db.createObjectStore("itemImages", { keyPath: "id" });
+          }
+        };
+        req.onsuccess = (e) => {
+          imgDb = e.target.result;
+          resolve(imgDb);
+        };
+        req.onerror = () => resolve(null);
+      });
+    }
+
+    function saveImageToDB(id, base64) {
+      return new Promise((resolve) => {
+        if (!imgDb) return resolve();
+        const tx = imgDb.transaction("itemImages", "readwrite");
+        const store = tx.objectStore("itemImages");
+        store.put({ id: String(id), base64 });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+      });
+    }
+
+    function getImageFromDB(id) {
+      return new Promise((resolve) => {
+        if (!imgDb) return resolve(null);
+        const tx = imgDb.transaction("itemImages", "readonly");
+        const store = tx.objectStore("itemImages");
+        const req = store.get(String(id));
+        req.onsuccess = () => resolve(req.result ? req.result.base64 : null);
+        req.onerror = () => resolve(null);
+      });
+    }
+
+    /* =======================================================
+       2. Application State & Store Configuration
+       ======================================================= */
+    const STORE_KEY = "MahaPetuk_Unified_POS_v6";
     const DEFAULT_DATA = {
-      upiId: "mahapetuk@upi", // আপনার আসল UPI ID এখানে দিতে পারেন
+      upiId: "mahapetuk@upi",
       menu: [
         { id: 1, name: "চিকেন চাউমিন", cat: "Chow", half: 60, full: 100, img: "" },
         { id: 2, name: "এগ চিকেন রোল", cat: "Roll", half: 0, full: 60, img: "" },
@@ -228,29 +342,86 @@
     let cart = [];
     let selectedSize = {};
     let currentCategory = 'ALL';
-    let qrcodeObj = null;
 
     function saveState() {
+      // Light metadata stored in localStorage
       localStorage.setItem(STORE_KEY, JSON.stringify(posData));
     }
 
-    function initPOS() {
+    async function initPOS() {
+      await initImageDB();
+
+      // Load heavy images from IndexedDB
+      for (const item of posData.menu) {
+        const storedImg = await getImageFromDB(item.id);
+        if (storedImg) item.img = storedImg;
+      }
+
+      renderTopSellingBar();
       renderCategories();
       renderApp();
       updateTodayBadge();
     }
 
+    /* সারি ১: সর্বাধিক বিক্রিত খাবার */
+    function renderTopSellingBar() {
+      const today = new Date().toISOString().slice(0, 10);
+      const todaysSales = posData.sales.filter(s => s.date.slice(0, 10) === today);
+      const countMap = {};
+
+      todaysSales.forEach(order => {
+        order.items.forEach(it => {
+          countMap[it.name] = (countMap[it.name] || 0) + it.qty;
+        });
+      });
+
+      const sorted = Object.entries(countMap).sort((a, b) => b[1] - a[1]);
+      const bar = document.getElementById("topSellingBar");
+
+      if (!sorted.length) {
+        bar.innerHTML = `<div style="font-size:12px; color:#888; padding:6px;">আজ এখনো কোনো বিক্রি হয়নি</div>`;
+        return;
+      }
+
+      bar.innerHTML = sorted.map((entry, idx) => {
+        const name = entry[0];
+        const sold = entry[1];
+        const item = posData.menu.find(m => m.name.toLowerCase() === name.toLowerCase()) || { img: "" };
+
+        return `
+          <div class="cat-avatar-pill" onclick="filterByFood('${name}')">
+            <div class="cat-avatar-circle">
+              <span class="rank-tag">#${idx + 1}</span>
+              ${item.img ? `<img src="${item.img}">` : `<i class="fa-solid fa-fire" style="font-size:18px; color:var(--primary);"></i>`}
+            </div>
+            <div class="cat-avatar-title">${name}</div>
+            <div class="sold-tag">${sold} বিক্রি</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterByFood(name) {
+      document.getElementById("searchInput").value = name;
+      renderApp();
+    }
+
+    /* সারি ২: ক্যাটাগরি মেনু */
     function renderCategories() {
       const cats = ['ALL', ...new Set(posData.menu.map(m => m.cat || 'General'))];
       document.getElementById('categoryScroll').innerHTML = cats.map(c => `
-        <button class="cat-btn ${c === currentCategory ? 'active' : ''}" onclick="setCat('${c}')">
-          ${c === 'ALL' ? 'সব খাবার' : c}
-        </button>
+        <div class="cat-avatar-pill ${c === currentCategory ? 'active' : ''}" onclick="setCat('${c}')">
+          <div class="cat-avatar-circle">
+            <i class="fa-solid fa-bowl-food" style="font-size:18px; color:${c === currentCategory ? 'var(--primary)' : '#888'};"></i>
+          </div>
+          <div class="cat-avatar-title">${c === 'ALL' ? 'সব খাবার' : c}</div>
+        </div>
       `).join('');
     }
 
     function setCat(cat) {
       currentCategory = cat;
+      document.getElementById("searchInput").value = "";
       renderCategories();
       renderApp();
     }
@@ -310,11 +481,8 @@
       const price = size === 'half' ? item.half : item.full;
 
       const found = cart.find(c => c.id === id && c.size === size);
-      if (found) {
-        found.qty++;
-      } else {
-        cart.push({ id, name: item.name, size, price, qty: 1 });
-      }
+      if (found) found.qty++;
+      else cart.push({ id, name: item.name, size, price, qty: 1 });
       updateCartDisplay();
     }
 
@@ -352,10 +520,54 @@
 
       document.getElementById('memoGrandTotal').textContent = `₹${totalAmt}`;
 
-      // QR Code তৈরি
-      generateUPIQR(totalAmt);
+      const half = Math.round(totalAmt / 2);
+      document.getElementById('inpCashPart').value = half;
+      document.getElementById('inpOnlinePart').value = totalAmt - half;
+      onSplitChange();
+
+      document.getElementById('inpTenderedCash').value = "";
+      calcChange();
 
       document.getElementById('billModal').style.display = 'flex';
+    }
+
+    function calcChange() {
+      const totalAmt = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+      const given = Number(document.getElementById('inpTenderedCash').value) || 0;
+      const change = given - totalAmt;
+      const el = document.getElementById('lblChangeReturn');
+
+      if (given === 0) {
+        el.textContent = "ফেরত: ₹০.০০";
+        el.style.color = "#047857";
+      } else if (change >= 0) {
+        el.textContent = `ফেরত দিন: ₹${change.toFixed(2)}`;
+        el.style.color = "#059669";
+      } else {
+        el.textContent = `কম আছে: ₹${Math.abs(change).toFixed(2)}`;
+        el.style.color = "#dc2626";
+      }
+    }
+
+    function onSplitChange() {
+      const totalAmt = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+      const cashPart = Number(document.getElementById('inpCashPart').value) || 0;
+      const onlinePart = Number(document.getElementById('inpOnlinePart').value) || 0;
+      const rem = totalAmt - (cashPart + onlinePart);
+      const statEl = document.getElementById('lblSplitStatus');
+
+      if (rem === 0) {
+        statEl.textContent = "হিসাব মিলেছে (₹০)";
+        statEl.style.color = "#059669";
+      } else if (rem > 0) {
+        statEl.textContent = `বাকি আছে: ₹${rem}`;
+        statEl.style.color = "#dc2626";
+      } else {
+        statEl.textContent = `অতিরিক্ত: ₹${Math.abs(rem)}`;
+        statEl.style.color = "#d97706";
+      }
+
+      generateUPIQR(onlinePart > 0 ? onlinePart : totalAmt);
     }
 
     function generateUPIQR(amount) {
@@ -364,11 +576,7 @@
       if (amount <= 0) return;
 
       const upiUrl = `upi://pay?pa=${posData.upiId}&pn=MahaPetuk&am=${amount}&cu=INR`;
-      new QRCode(qrEl, {
-        text: upiUrl,
-        width: 140,
-        height: 140
-      });
+      new QRCode(qrEl, { text: upiUrl, width: 130, height: 130 });
     }
 
     function changeQty(idx, delta) {
@@ -388,23 +596,42 @@
     function settleSale(mode) {
       if (!cart.length) return;
       const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-      const billNo = "MP-" + String(posData.sales.length + 1).padStart(5, '0');
+      let cashPart = 0, onlinePart = 0;
 
+      if (mode === 'Cash') {
+        cashPart = total;
+        onlinePart = 0;
+      } else if (mode === 'Online') {
+        cashPart = 0;
+        onlinePart = total;
+      } else if (mode === 'Split') {
+        cashPart = Number(document.getElementById('inpCashPart').value) || 0;
+        onlinePart = Number(document.getElementById('inpOnlinePart').value) || 0;
+        if (cashPart + onlinePart !== total) {
+          alert(`ক্যাশ এবং অনলাইন মিলিয়ে মোট বিল (₹${total}) সমান হতে হবে!`);
+          return;
+        }
+      }
+
+      const billNo = "MP-" + String(posData.sales.length + 1).padStart(5, '0');
       const sale = {
         id: Date.now(),
         billNo,
         items: [...cart],
         total,
-        mode,
+        cash: cashPart,
+        online: onlinePart,
+        mode: mode === 'Split' ? 'ক্যাশ+অনলাইন' : (mode === 'Cash' ? 'ক্যাশ' : 'অনলাইন'),
         date: new Date().toISOString()
       };
 
       posData.sales.unshift(sale);
       saveState();
 
-      alert(`✅ বিল সংরক্ষিত!\nবিল নং: ${billNo}\nমোট: ₹${total} (${mode})`);
+      alert(`✅ বিল সংরক্ষিত!\nবিল নং: ${billNo}\nমোট: ₹${total}\nপদ্ধতি: ${sale.mode} (ক্যাশ: ₹${cashPart} | অনলাইন: ₹${onlinePart})`);
       clearCurrentCart();
       updateTodayBadge();
+      renderTopSellingBar();
     }
 
     function printThermal() {
@@ -421,7 +648,7 @@
         <div style="margin:6px 0; border-bottom:1px dashed #000; padding-bottom:4px;">
           ${cart.map(c => `
             <div style="display:flex; justify-content:space-between; font-size:11px;">
-              <span>${c.name} (${c.size === 'half' ? 'H' : 'F'}) x${c.qty}</span>
+              <span>${c.name} (${c.size === 'half' ? 'হাফ' : 'ফুল'}) x${c.qty}</span>
               <span>₹${c.price * c.qty}</span>
             </div>
           `).join('')}
@@ -456,8 +683,8 @@
       const filtered = posData.sales.filter(s => !filterDate || s.date.slice(0, 10) === filterDate);
 
       const total = filtered.reduce((s, a) => s + a.total, 0);
-      const cash = filtered.filter(f => f.mode === 'Cash').reduce((s, a) => s + a.total, 0);
-      const online = filtered.filter(f => f.mode === 'Online').reduce((s, a) => s + a.total, 0);
+      const cash = filtered.reduce((s, a) => s + (a.cash !== undefined ? a.cash : (a.mode === 'ক্যাশ' ? a.total : 0)), 0);
+      const online = filtered.reduce((s, a) => s + (a.online !== undefined ? a.online : (a.mode === 'অনলাইন' ? a.total : 0)), 0);
 
       document.getElementById('ledgerStats').innerHTML = `
         মোট বিল: ${filtered.length} টি | মোট বিক্রি: ₹${total}<br>
@@ -465,14 +692,53 @@
       `;
 
       document.getElementById('ledgerRecords').innerHTML = filtered.map(r => `
-        <div style="border-bottom:1px solid #e2e8f0; padding:8px 0; font-size:12px;">
-          <div style="display:flex; justify-content:space-between; font-weight:bold;">
-            <span>${r.billNo} • ${new Date(r.date).toLocaleTimeString('bn-IN')}</span>
-            <span style="color:#059669;">₹${r.total} (${r.mode})</span>
+        <div style="border-bottom:1px solid #e2e8f0; padding:8px 0; font-size:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:bold;">
+              <span>${r.billNo} • ${new Date(r.date).toLocaleDateString('bn-IN')} ${new Date(r.date).toLocaleTimeString('bn-IN')}</span>
+              <span style="color:#059669;"> - ₹${r.total} (${r.mode})</span>
+            </div>
+            <div style="color:#64748b;">${r.items.map(i => `${i.name}×${i.qty}`).join(', ')}</div>
+            <div style="color:#475569; font-size:11px;">ক্যাশ: ₹${r.cash || 0} | অনলাইন: ₹${r.online || 0}</div>
           </div>
-          <div style="color:#64748b;">${r.items.map(i => `${i.name}×${i.qty}`).join(', ')}</div>
+          <button onclick="deleteSaleRecord(${r.id})" style="background:#fee2e2; color:#dc2626; border:1px solid #f87171; padding:4px 8px; border-radius:6px; cursor:pointer; font-weight:bold;">মুছুন</button>
         </div>
       `).join('') || '<div style="text-align:center; padding:15px; color:#999;">কোনো বিক্রির রেকর্ড নেই</div>';
+    }
+
+    function deleteSaleRecord(id) {
+      if (!confirm("আপনি কি নিশ্চিত এই বিক্রির হিসাবটি মুছে ফেলতে চান? আজকের মোট হিসাবেও এটি কমে যাবে।")) return;
+      posData.sales = posData.sales.filter(s => s.id !== id);
+      saveState();
+      renderLedger();
+      updateTodayBadge();
+      renderTopSellingBar();
+    }
+
+    /* এক্সেল / CSV ডাউনলোড (তারিখ ও সময় সমেত নিখুঁত রিপোর্ট) */
+    function exportToExcelCSV() {
+      if (!posData.sales.length) {
+        alert("ডাউনলোড করার মতো কোনো বিক্রির রেকর্ড নেই!");
+        return;
+      }
+
+      // UTF-8 BOM যুক্ত যাতে বাংলা লেখা এক্সেলে একদম পরিষ্কার ফুটে ওঠে
+      let csvContent = "\uFEFFবিল নং,তারিখ,সময়,মোট বিল (₹),ক্যাশ (₹),অনলাইন (₹),পেমেন্ট পদ্ধতি,অর্ডার করা খাবারের তালিকা\n";
+
+      posData.sales.forEach(s => {
+        const d = new Date(s.date);
+        const dateStr = d.toLocaleDateString('en-GB'); // DD/MM/YYYY
+        const timeStr = d.toLocaleTimeString('en-US'); // 12-hour format with AM/PM
+        const itemsStr = s.items.map(i => `${i.name} (${i.size === 'half' ? 'হাফ' : 'ফুল'}) x${i.qty}`).join(" | ");
+
+        csvContent += `"${s.billNo}","${dateStr}","${timeStr}","${s.total}","${s.cash || 0}","${s.online || 0}","${s.mode}","${itemsStr}"\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `MahaPetuk_Sales_Report_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
     }
 
     function processImage(e) {
@@ -483,12 +749,12 @@
         const img = new Image();
         img.onload = function() {
           const cvs = document.createElement('canvas');
-          const MAX = 700;
+          const MAX = 500;
           let w = img.width, h = img.height;
           if (w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
           cvs.width = w; cvs.height = h;
           cvs.getContext('2d').drawImage(img, 0, 0, w, h);
-          document.getElementById('inpImgBase64').value = cvs.toDataURL('image/jpeg', 0.85);
+          document.getElementById('inpImgBase64').value = cvs.toDataURL('image/jpeg', 0.8);
         };
         img.src = evt.target.result;
       };
@@ -496,32 +762,87 @@
     }
 
     function openFoodManager() {
+      resetFoodForm();
       renderManageList();
       document.getElementById('foodModal').style.display = 'flex';
     }
 
     function renderManageList() {
       document.getElementById('foodListManage').innerHTML = posData.menu.map(m => `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; font-size:13px;">
-          <span><b>${m.name}</b> (₹${m.full})</span>
-          <button onclick="deleteFood(${m.id})" style="color:red; background:none; border:none; cursor:pointer;">মুছুন</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-size:12px; background:#f8fafc; padding:6px 10px; border-radius:6px; border:1px solid #ddd;">
+          <div>
+            <b>${m.name}</b> (₹${m.full}) [${m.cat}]
+            <div style="font-size:11px; color:#666;">হাফ: ₹${m.half || 0}</div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button onclick="startEditFood(${m.id})" style="background:#2563eb; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">এডিট</button>
+            <button onclick="deleteFood(${m.id})" style="background:#fee2e2; color:#dc2626; border:1px solid #f87171; padding:4px 8px; border-radius:4px; font-weight:bold; cursor:pointer;">মুছুন</button>
+          </div>
         </div>
       `).join('');
     }
 
-    function saveFoodItem() {
+    function startEditFood(id) {
+      const item = posData.menu.find(m => m.id === id);
+      if (!item) return;
+      document.getElementById('editItemId').value = item.id;
+      document.getElementById('inpName').value = item.name;
+      document.getElementById('inpCat').value = item.cat || '';
+      document.getElementById('inpHalf').value = item.half || '';
+      document.getElementById('inpFull').value = item.full || '';
+      document.getElementById('inpImgBase64').value = item.img || '';
+
+      document.getElementById('btnSaveFood').textContent = "আপডেট করুন";
+      document.getElementById('btnSaveFood').style.background = "#2563eb";
+      document.getElementById('btnSaveFood').style.color = "#fff";
+      document.getElementById('btnCancelEdit').style.display = "inline-block";
+    }
+
+    function resetFoodForm() {
+      document.getElementById('editItemId').value = '';
+      document.getElementById('inpName').value = '';
+      document.getElementById('inpCat').value = '';
+      document.getElementById('inpHalf').value = '';
+      document.getElementById('inpFull').value = '';
+      document.getElementById('inpImgBase64').value = '';
+      document.getElementById('inpImg').value = '';
+
+      document.getElementById('btnSaveFood').textContent = "মেনুতে সেভ করুন";
+      document.getElementById('btnSaveFood').style.background = "var(--primary)";
+      document.getElementById('btnSaveFood').style.color = "#000";
+      document.getElementById('btnCancelEdit').style.display = "none";
+    }
+
+    async function saveFoodItem() {
+      const editIdStr = document.getElementById('editItemId').value;
       const name = document.getElementById('inpName').value.trim();
       const cat = document.getElementById('inpCat').value.trim() || 'General';
       const half = Number(document.getElementById('inpHalf').value) || 0;
       const full = Number(document.getElementById('inpFull').value) || 0;
-      const img = document.getElementById('inpImgBase64').value;
+      let img = document.getElementById('inpImgBase64').value;
 
       if (!name || full <= 0) { alert('সঠিক নাম ও দাম দিন'); return; }
 
-      posData.menu.push({ id: Date.now(), name, cat, half, full, img });
+      if (editIdStr) {
+        const id = Number(editIdStr);
+        const idx = posData.menu.findIndex(m => m.id === id);
+        if (idx !== -1) {
+          if (!img) img = posData.menu[idx].img;
+          if (img) await saveImageToDB(id, img);
+          posData.menu[idx] = { id, name, cat, half, full, img };
+          alert('✅ খাবার সফলভাবে আপডেট হয়েছে!');
+        }
+      } else {
+        const newId = Date.now();
+        if (img) await saveImageToDB(newId, img);
+        posData.menu.push({ id: newId, name, cat, half, full, img });
+        alert('✅ নতুন খাবার যোগ হয়েছে!');
+      }
+
       saveState();
       initPOS();
-      closeModal('foodModal');
+      renderManageList();
+      resetFoodForm();
     }
 
     function deleteFood(id) {
@@ -530,14 +851,6 @@
       saveState();
       initPOS();
       renderManageList();
-    }
-
-    function exportData() {
-      const blob = new Blob([JSON.stringify(posData, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `mahapetuk-sales-${new Date().toISOString().slice(0,10)}.json`;
-      a.click();
     }
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
