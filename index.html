@@ -118,6 +118,10 @@
     .form-group label { display: block; font-size: 12px; font-weight: bold; color: #334155; margin-bottom: 4px; }
     .form-control { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; }
 
+    /* Dedicated Download Button Style */
+    .btn-download-backup { width: 100%; padding: 12px; background: #059669; color: #fff; border: none; border-radius: 8px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3); }
+    .btn-download-backup:active { transform: scale(0.98); }
+
     /* Thermal Bill Print */
     @media print {
       @page { size: 58mm auto; margin: 0; }
@@ -237,20 +241,30 @@
     </div>
   </div>
 
-  <!-- Store Settings Modal (সম্পূর্ণ দোকান ও ব্যাংকিং সেটিংস) -->
+  <!-- Store Settings Modal -->
   <div class="modal-wrap" id="settingsModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 style="font-weight:800;"><i class="fa-solid fa-store"></i> দোকান ও বিলিং সেটিংস</h3>
+        <h3 style="font-weight:800;"><i class="fa-solid fa-store"></i> দোকান ও ব্যাকআপ সেটিংস</h3>
         <button class="btn-modal-close" onclick="closeModal('settingsModal')">✕</button>
       </div>
 
+      <!-- ১-ক্লিকে ব্যাকআপ ফাইল সরাসরি ডাউনলোড বাটন -->
+      <div style="background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:10px; padding:12px; margin-bottom:14px; text-align:center;">
+        <div style="font-size:12px; font-weight:bold; color:#065f46; margin-bottom:8px;">
+          <i class="fa-solid fa-cloud-arrow-down"></i> মেনু ও ডাটা সুরক্ষিত রাখতে সরাসরি ডাউনলোড করুন:
+        </div>
+        <button type="button" class="btn-download-backup" onclick="downloadBackupFile()">
+          <i class="fa-solid fa-download"></i> ব্যাকআপ ফাইল ডাউনলোড করুন
+        </button>
+      </div>
+
       <div class="form-group">
-        <label>দোকানের নাম (রসিদের শীর্ষে ও ব্যানারে দেখাবে):</label>
+        <label>দোকানের নাম:</label>
         <input type="text" id="cfgStoreName" class="form-control" placeholder="যেমন: মহা পেটুক">
       </div>
       <div class="form-group">
-        <label>দোকানের ঠিকানা / সাবটাইটেল:</label>
+        <label>দোকানের ঠিকানা:</label>
         <input type="text" id="cfgStoreLoc" class="form-control" placeholder="যেমন: আমতা সাহাপাড়া বাজার">
       </div>
       <div class="form-group">
@@ -258,8 +272,8 @@
         <input type="text" id="cfgStorePhone" class="form-control" placeholder="যেমন: +91 98765 43210">
       </div>
       <div class="form-group">
-        <label>মার্চেন্ট ব্যাংকিং UPI ID (QR স্ক্যানারের জন্য):</label>
-        <input type="text" id="cfgStoreUpi" class="form-control" placeholder="যেমন: merchant@upi বা 9876543210@paytm">
+        <label>মার্চেন্ট ব্যাংকিং UPI ID:</label>
+        <input type="text" id="cfgStoreUpi" class="form-control" placeholder="যেমন: mahapetuk@upi">
       </div>
       <div class="form-group">
         <label>রসিদের শেষের বার্তা (Thank You Note):</label>
@@ -271,26 +285,14 @@
         <input type="hidden" id="cfgBannerBase64">
       </div>
 
-      <button onclick="saveStoreSettings()" style="width:100%; padding:10px; background:var(--primary); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer; margin-top:6px;">সেটিংস সেভ করুন</button>
-    </div>
-  </div>
+      <button onclick="saveStoreSettings()" style="width:100%; padding:10px; background:var(--primary); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer; margin-top:4px;">সেটিংস সেভ করুন</button>
 
-  <!-- Sales Ledger Modal with Excel Download -->
-  <div class="modal-wrap" id="ledgerModal">
-    <div class="modal-box" style="max-width: 480px;">
-      <div class="modal-header">
-        <h3 style="font-weight:800;"><i class="fa-solid fa-book"></i> দৈনিক সেলস খাতা</h3>
-        <button class="btn-modal-close" onclick="closeModal('ledgerModal')">✕</button>
+      <!-- অন্য ফোনে ফাইল রিস্টোর বাটন -->
+      <div style="border-top: 1px solid #e2e8f0; margin-top:14px; padding-top:10px;">
+        <div style="font-size:12px; font-weight:bold; margin-bottom:6px; color:#475569;">ডাউনলোড করা ফাইল অন্য ফোনে রিস্টোর করুন:</div>
+        <button onclick="document.getElementById('inpRestoreFile').click()" style="width:100%; padding:9px; background:#2563eb; color:#fff; border:none; border-radius:6px; font-weight:bold; font-size:13px; cursor:pointer;"><i class="fa-solid fa-upload"></i> রিস্টোর ফাইল সিলেক্ট করুন</button>
+        <input type="file" id="inpRestoreFile" accept=".json" onchange="restoreBackupFile(event)" style="display:none;">
       </div>
-
-      <div style="display:flex; gap:6px; margin-bottom:10px;">
-        <input type="date" id="ledgerDate" style="flex:1; padding:6px; border:1px solid #ccc; border-radius:6px;" onchange="renderLedger()">
-        <button onclick="document.getElementById('ledgerDate').value=''; renderLedger();" style="padding:6px 10px; background:#333; color:#fff; border:none; border-radius:6px; font-size:12px;">সব</button>
-        <button onclick="exportToExcelCSV()" style="padding:6px 12px; background:#059669; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;" title="বিগত রেকর্ড Excel/CSV হিসেবে ডাউনলোড করুন"><i class="fa-solid fa-file-excel"></i> এক্সেল ডাউনলোড</button>
-      </div>
-
-      <div id="ledgerStats" style="background:#f1f5f9; padding:8px; border-radius:8px; font-size:13px; font-weight:bold; margin-bottom:10px;"></div>
-      <div id="ledgerRecords" style="max-height: 300px; overflow-y: auto;"></div>
     </div>
   </div>
 
@@ -308,7 +310,7 @@
         <input type="number" id="inpHalf" placeholder="হাফ দাম (₹)" style="flex:1; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
         <input type="number" id="inpFull" placeholder="ফুল দাম (₹)" style="flex:1; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
       </div>
-      <label style="font-size:11px; color:#666; font-weight:bold;">খাবারের ছবি আপলোড (৬০+ ছবির জন্য অপ্টিমাইজড):</label>
+      <label style="font-size:11px; color:#666; font-weight:bold;">খাবারের ছবি আপলোড:</label>
       <input type="file" id="inpImg" accept="image/*" onchange="processImage(event)" style="margin-bottom:8px; width:100%;">
       <input type="hidden" id="inpImgBase64">
       <div style="display:flex; gap:6px;">
@@ -320,62 +322,77 @@
     </div>
   </div>
 
+  <!-- Sales Ledger Modal -->
+  <div class="modal-wrap" id="ledgerModal">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 style="font-weight:800;"><i class="fa-solid fa-book"></i> দৈনিক সেলস খাতা</h3>
+        <button class="btn-modal-close" onclick="closeModal('ledgerModal')">✕</button>
+      </div>
+
+      <div style="display:flex; gap:6px; margin-bottom:10px;">
+        <input type="date" id="ledgerDate" style="flex:1; padding:6px; border:1px solid #ccc; border-radius:6px;" onchange="renderLedger()">
+        <button onclick="document.getElementById('ledgerDate').value=''; renderLedger();" style="padding:6px 10px; background:#333; color:#fff; border:none; border-radius:6px; font-size:12px;">সব</button>
+        <button onclick="exportToExcelCSV()" style="padding:6px 12px; background:#059669; color:#fff; border:none; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-file-excel"></i> এক্সেল ডাউনলোড</button>
+      </div>
+
+      <div id="ledgerStats" style="background:#f1f5f9; padding:8px; border-radius:8px; font-size:13px; font-weight:bold; margin-bottom:10px;"></div>
+      <div id="ledgerRecords" style="max-height: 300px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
   <!-- Hidden Thermal Printable Area -->
   <div id="printableThermalBill" style="display:none;"></div>
 
   <script>
     /* =======================================================
-       1. IndexedDB High-Capacity Storage System
-       Allows 60-100+ images without storage quota limits
+       ১. পার্মানেন্ট ব্রাউজার ডাটাবেস ইঞ্জিন (IndexedDB)
        ======================================================= */
-    const DB_NAME = "MahaPetuk_ImgDB_v2";
+    const DB_NAME = "MahaPetuk_Direct_Web_DB";
     const DB_VERSION = 1;
-    let imgDb;
+    let localDB;
 
-    function initImageDB() {
-      return new Promise((resolve) => {
+    function openLocalDB() {
+      return new Promise((resolve, reject) => {
         const req = indexedDB.open(DB_NAME, DB_VERSION);
         req.onupgradeneeded = (e) => {
           const db = e.target.result;
-          if (!db.objectStoreNames.contains("itemImages")) {
-            db.createObjectStore("itemImages", { keyPath: "id" });
+          if (!db.objectStoreNames.contains("webStore")) {
+            db.createObjectStore("webStore", { keyPath: "id" });
           }
         };
         req.onsuccess = (e) => {
-          imgDb = e.target.result;
-          resolve(imgDb);
+          localDB = e.target.result;
+          resolve(localDB);
         };
-        req.onerror = () => resolve(null);
+        req.onerror = (e) => reject(e);
       });
     }
 
-    function saveImageToDB(id, base64) {
+    function putToDB(key, val) {
       return new Promise((resolve) => {
-        if (!imgDb) return resolve();
-        const tx = imgDb.transaction("itemImages", "readwrite");
-        const store = tx.objectStore("itemImages");
-        store.put({ id: String(id), base64 });
+        if (!localDB) return resolve();
+        const tx = localDB.transaction("webStore", "readwrite");
+        const store = tx.objectStore("webStore");
+        store.put({ id: key, data: val });
         tx.oncomplete = () => resolve();
         tx.onerror = () => resolve();
       });
     }
 
-    function getImageFromDB(id) {
+    function getFromDB(key) {
       return new Promise((resolve) => {
-        if (!imgDb) return resolve(null);
-        const tx = imgDb.transaction("itemImages", "readonly");
-        const store = tx.objectStore("itemImages");
-        const req = store.get(String(id));
-        req.onsuccess = () => resolve(req.result ? req.result.base64 : null);
+        if (!localDB) return resolve(null);
+        const tx = localDB.transaction("webStore", "readonly");
+        const store = tx.objectStore("webStore");
+        const req = store.get(key);
+        req.onsuccess = () => resolve(req.result ? req.result.data : null);
         req.onerror = () => resolve(null);
       });
     }
 
-    /* =======================================================
-       2. Application State & Store Configuration
-       ======================================================= */
-    const STORE_KEY = "MahaPetuk_Unified_POS_v7";
-    const DEFAULT_DATA = {
+    /* ডিফল্ট খাবার তালিকা */
+    const INITIAL_DATA = {
       shop: {
         name: "মহা পেটুক",
         loc: "আমতা সাহাপাড়া বাজার",
@@ -393,24 +410,33 @@
       sales: []
     };
 
-    let posData = JSON.parse(localStorage.getItem(STORE_KEY)) || DEFAULT_DATA;
-    if (!posData.shop) posData.shop = DEFAULT_DATA.shop;
-
+    let posData = null;
     let cart = [];
     let selectedSize = {};
     let currentCategory = 'ALL';
 
-    function saveState() {
-      localStorage.setItem(STORE_KEY, JSON.stringify(posData));
+    async function saveState() {
+      if (!posData) return;
+      await putToDB("pos_master", posData);
+      try {
+        localStorage.setItem("pos_master_cache", JSON.stringify(posData));
+      } catch (e) {}
     }
 
     async function initPOS() {
-      await initImageDB();
+      await openLocalDB();
+      let loaded = await getFromDB("pos_master");
+      if (!loaded) {
+        try {
+          loaded = JSON.parse(localStorage.getItem("pos_master_cache"));
+        } catch (e) {}
+      }
 
-      // Load heavy images from IndexedDB
-      for (const item of posData.menu) {
-        const storedImg = await getImageFromDB(item.id);
-        if (storedImg) item.img = storedImg;
+      if (loaded && loaded.menu && loaded.menu.length) {
+        posData = loaded;
+      } else {
+        posData = INITIAL_DATA;
+        await saveState();
       }
 
       renderStoreHeader();
@@ -420,9 +446,8 @@
       updateTodayBadge();
     }
 
-    /* দোকান ও ব্যানার রেন্ডার */
     function renderStoreHeader() {
-      const s = posData.shop || DEFAULT_DATA.shop;
+      const s = posData.shop;
       document.getElementById("dispShopName").textContent = s.name || "মহা পেটুক";
       document.getElementById("dispShopLoc").textContent = s.loc || "আমতা সাহাপাড়া বাজার";
       document.getElementById("dispShopPhone").textContent = s.phone ? `ফোন: ${s.phone}` : "ফোন: সেট করা নেই";
@@ -438,7 +463,6 @@
       }
     }
 
-    /* সারি ১: সর্বাধিক বিক্রিত খাবার */
     function renderTopSellingBar() {
       const today = new Date().toISOString().slice(0, 10);
       const todaysSales = posData.sales.filter(s => s.date.slice(0, 10) === today);
@@ -481,7 +505,6 @@
       renderApp();
     }
 
-    /* সারি ২: ক্যাটাগরি মেনু */
     function renderCategories() {
       const cats = ['ALL', ...new Set(posData.menu.map(m => m.cat || 'General'))];
       document.getElementById('categoryScroll').innerHTML = cats.map(c => `
@@ -670,7 +693,7 @@
       closeModal('billModal');
     }
 
-    function settleSale(mode) {
+    async function settleSale(mode) {
       if (!cart.length) return;
       const total = cart.reduce((s, i) => s + (i.price * i.qty), 0);
       let cashPart = 0, onlinePart = 0;
@@ -703,7 +726,7 @@
       };
 
       posData.sales.unshift(sale);
-      saveState();
+      await saveState();
 
       alert(`✅ বিল সংরক্ষিত!\nবিল নং: ${billNo}\nমোট: ₹${total}\nপদ্ধতি: ${sale.mode} (ক্যাশ: ₹${cashPart} | অনলাইন: ₹${onlinePart})`);
       clearCurrentCart();
@@ -715,7 +738,7 @@
       if (!cart.length) return;
       const totalAmt = cart.reduce((s, i) => s + (i.price * i.qty), 0);
       const billBox = document.getElementById('printableThermalBill');
-      const s = posData.shop || DEFAULT_DATA.shop;
+      const s = posData.shop;
       
       billBox.innerHTML = `
         <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:4px;">
@@ -751,11 +774,9 @@
       document.getElementById('badgeSalesText').textContent = `আজকের বিক্রি: ${todaySales.length} টি বিল • মোট: ₹${sum}`;
     }
 
-    /* =======================================================
-       3. Store Settings Management (সেটিংস সংরক্ষণ)
-       ======================================================= */
+    /* দোকান সেটিংস সংরক্ষণ */
     function openStoreSettings() {
-      const s = posData.shop || DEFAULT_DATA.shop;
+      const s = posData.shop;
       document.getElementById('cfgStoreName').value = s.name || "";
       document.getElementById('cfgStoreLoc').value = s.loc || "";
       document.getElementById('cfgStorePhone').value = s.phone || "";
@@ -773,19 +794,19 @@
         const img = new Image();
         img.onload = function() {
           const cvs = document.createElement('canvas');
-          const MAX = 650;
+          const MAX = 600;
           let w = img.width, h = img.height;
           if (w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
           cvs.width = w; cvs.height = h;
           cvs.getContext('2d').drawImage(img, 0, 0, w, h);
-          document.getElementById('cfgBannerBase64').value = cvs.toDataURL('image/jpeg', 0.8);
+          document.getElementById('cfgBannerBase64').value = cvs.toDataURL('image/jpeg', 0.75);
         };
         img.src = evt.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    function saveStoreSettings() {
+    async function saveStoreSettings() {
       const name = document.getElementById('cfgStoreName').value.trim() || "মহা পেটুক";
       const loc = document.getElementById('cfgStoreLoc').value.trim();
       const phone = document.getElementById('cfgStorePhone').value.trim();
@@ -794,13 +815,54 @@
       const banner = document.getElementById('cfgBannerBase64').value;
 
       posData.shop = { name, loc, phone, upiId, footer, banner };
-      saveState();
+      await saveState();
       renderStoreHeader();
       closeModal('settingsModal');
-      alert("✅ দোকান ও ব্যাংকিং সেটিংস সফলভাবে সেভ হয়েছে!");
+      alert("✅ দোকান ও ব্যাংকিং সেটিংস স্থায়ীভাবে সেভ হয়েছে!");
     }
 
-    /* Sales Ledger */
+    /* সরাসরি ব্যাকআপ ডাউনলোড ফাংশন */
+    function downloadBackupFile() {
+      if (!posData) {
+        alert("কোনো ডাটা পাওয়া যায়নি!");
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(posData));
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", `MahaPetuk_Full_Backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    /* রিস্টোর ফাংশন */
+    function restoreBackupFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (parsed && parsed.menu) {
+            posData = parsed;
+            await saveState();
+            renderStoreHeader();
+            renderCategories();
+            renderApp();
+            updateTodayBadge();
+            renderTopSellingBar();
+            alert("✅ সমস্ত মেনু ও সেটিংস ১ ক্লিকে রিস্টোর সফল হয়েছে!");
+            closeModal('settingsModal');
+          }
+        } catch (err) {
+          alert("ভুল বা ক্ষতিগ্রস্ত ব্যাকআপ ফাইল!");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    /* সেলস লেজার */
     function openLedger() {
       document.getElementById('ledgerDate').value = new Date().toISOString().slice(0, 10);
       renderLedger();
@@ -835,10 +897,10 @@
       `).join('') || '<div style="text-align:center; padding:15px; color:#999;">কোনো বিক্রির রেকর্ড নেই</div>';
     }
 
-    function deleteSaleRecord(id) {
+    async function deleteSaleRecord(id) {
       if (!confirm("আপনি কি নিশ্চিত এই বিক্রির হিসাবটি মুছে ফেলতে চান? আজকের মোট হিসাবেও এটি কমে যাবে।")) return;
       posData.sales = posData.sales.filter(s => s.id !== id);
-      saveState();
+      await saveState();
       renderLedger();
       updateTodayBadge();
       renderTopSellingBar();
@@ -876,18 +938,19 @@
         const img = new Image();
         img.onload = function() {
           const cvs = document.createElement('canvas');
-          const MAX = 500;
+          const MAX = 450;
           let w = img.width, h = img.height;
           if (w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
           cvs.width = w; cvs.height = h;
           cvs.getContext('2d').drawImage(img, 0, 0, w, h);
-          document.getElementById('inpImgBase64').value = cvs.toDataURL('image/jpeg', 0.8);
+          document.getElementById('inpImgBase64').value = cvs.toDataURL('image/jpeg', 0.75);
         };
         img.src = evt.target.result;
       };
       reader.readAsDataURL(file);
     }
 
+    /* সরাসরি ওয়েবসাইট মেনু ম্যানেজার */
     function openFoodManager() {
       resetFoodForm();
       renderManageList();
@@ -955,28 +1018,28 @@
         const idx = posData.menu.findIndex(m => m.id === id);
         if (idx !== -1) {
           if (!img) img = posData.menu[idx].img;
-          if (img) await saveImageToDB(id, img);
           posData.menu[idx] = { id, name, cat, half, full, img };
-          alert('✅ খাবার সফলভাবে আপডেট হয়েছে!');
+          alert('✅ খাবার সরাসরি আপডেট হয়েছে!');
         }
       } else {
         const newId = Date.now();
-        if (img) await saveImageToDB(newId, img);
         posData.menu.push({ id: newId, name, cat, half, full, img });
-        alert('✅ নতুন খাবার যোগ হয়েছে!');
+        alert('✅ নতুন খাবার যুক্ত হয়েছে!');
       }
 
-      saveState();
-      initPOS();
+      await saveState();
+      renderCategories();
+      renderApp();
       renderManageList();
       resetFoodForm();
     }
 
-    function deleteFood(id) {
+    async function deleteFood(id) {
       if (!confirm('মুছে ফেলতে চান?')) return;
       posData.menu = posData.menu.filter(m => m.id !== id);
-      saveState();
-      initPOS();
+      await saveState();
+      renderCategories();
+      renderApp();
       renderManageList();
     }
 
