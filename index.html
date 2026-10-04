@@ -33,10 +33,12 @@
     .top-actions { display: flex; gap: 8px; }
     .btn-action { background: var(--surface); color: #fff; border: 1px solid #444; padding: 7px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 
-    /* Summary Bar */
+    /* Store Header / Hero */
     .hero-summary { background: linear-gradient(180deg, #1c1917 0%, #121214 100%); padding: 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .store-banner-preview { max-width: 100%; max-height: 90px; object-fit: cover; border-radius: 10px; margin-bottom: 8px; display: none; border: 1px solid #444; }
     .shop-name { font-size: 24px; font-weight: 800; color: #fff; }
-    .shop-loc { font-size: 13px; color: var(--primary); margin-bottom: 8px; }
+    .shop-loc { font-size: 13px; color: var(--primary); margin-bottom: 4px; }
+    .shop-phone-badge { font-size: 12px; color: #d1d5db; margin-bottom: 8px; }
     .daily-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.15); border: 1px solid var(--success); color: #6ee7b7; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: bold; }
 
     /* Filters & Two-Tier Avatars */
@@ -111,6 +113,11 @@
     .btn-pay-s { grid-column: span 2; background: #d97706; color: #fff; padding: 12px; border: none; border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer; }
     .btn-print { grid-column: span 2; background: #18181b; color: #fff; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
+    /* Form Fields */
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 12px; font-weight: bold; color: #334155; margin-bottom: 4px; }
+    .form-control { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; }
+
     /* Thermal Bill Print */
     @media print {
       @page { size: 58mm auto; margin: 0; }
@@ -126,15 +133,18 @@
   <div class="top-bar">
     <div class="brand-title"><i class="fa-solid fa-burger"></i> মহা পেটুক POS</div>
     <div class="top-actions">
+      <button class="btn-action" onclick="openStoreSettings()"><i class="fa-solid fa-store"></i> সেটিংস</button>
       <button class="btn-action" onclick="openLedger()"><i class="fa-solid fa-book"></i> সেলস খাতা</button>
       <button class="btn-action" style="color:var(--primary);" onclick="openFoodManager()"><i class="fa-solid fa-plus"></i> মেনু</button>
     </div>
   </div>
 
-  <!-- Hero & Today Sales -->
+  <!-- Store Header / Hero -->
   <div class="hero-summary">
-    <div class="shop-name">মহা পেটুক</div>
-    <div class="shop-loc">আমতা সাহাপাড়া বাজার</div>
+    <img id="storeBannerImg" class="store-banner-preview" alt="দোকানের ব্যানার">
+    <div class="shop-name" id="dispShopName">মহা পেটুক</div>
+    <div class="shop-loc" id="dispShopLoc">আমতা সাহাপাড়া বাজার</div>
+    <div class="shop-phone-badge" id="dispShopPhone">ফোন: সেট করা নেই</div>
     <div class="daily-badge" id="dailySalesBadge">
       <i class="fa-solid fa-chart-line"></i> <span id="badgeSalesText">আজকের বিক্রি: হিসাব হচ্ছে...</span>
     </div>
@@ -171,7 +181,7 @@
   <div class="modal-wrap" id="billModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h3 style="font-weight:800;">মহা পেটুক - মেমো কাউন্টার</h3>
+        <h3 style="font-weight:800;" id="modalShopTitle">মহা পেটুক - মেমো কাউন্টার</h3>
         <button class="btn-modal-close" onclick="closeModal('billModal')">✕</button>
       </div>
 
@@ -227,6 +237,44 @@
     </div>
   </div>
 
+  <!-- Store Settings Modal (সম্পূর্ণ দোকান ও ব্যাংকিং সেটিংস) -->
+  <div class="modal-wrap" id="settingsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-weight:800;"><i class="fa-solid fa-store"></i> দোকান ও বিলিং সেটিংস</h3>
+        <button class="btn-modal-close" onclick="closeModal('settingsModal')">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label>দোকানের নাম (রসিদের শীর্ষে ও ব্যানারে দেখাবে):</label>
+        <input type="text" id="cfgStoreName" class="form-control" placeholder="যেমন: মহা পেটুক">
+      </div>
+      <div class="form-group">
+        <label>দোকানের ঠিকানা / সাবটাইটেল:</label>
+        <input type="text" id="cfgStoreLoc" class="form-control" placeholder="যেমন: আমতা সাহাপাড়া বাজার">
+      </div>
+      <div class="form-group">
+        <label>অফিসিয়াল ফোন নম্বর:</label>
+        <input type="text" id="cfgStorePhone" class="form-control" placeholder="যেমন: +91 98765 43210">
+      </div>
+      <div class="form-group">
+        <label>মার্চেন্ট ব্যাংকিং UPI ID (QR স্ক্যানারের জন্য):</label>
+        <input type="text" id="cfgStoreUpi" class="form-control" placeholder="যেমন: merchant@upi বা 9876543210@paytm">
+      </div>
+      <div class="form-group">
+        <label>রসিদের শেষের বার্তা (Thank You Note):</label>
+        <input type="text" id="cfgStoreFooter" class="form-control" placeholder="যেমন: *** ধন্যবাদ, আবার আসবেন ***">
+      </div>
+      <div class="form-group">
+        <label>দোকানের ব্যানার ছবি আপলোড করুন:</label>
+        <input type="file" id="cfgBannerFile" accept="image/*" onchange="processBannerImage(event)" style="font-size:12px; width:100%;">
+        <input type="hidden" id="cfgBannerBase64">
+      </div>
+
+      <button onclick="saveStoreSettings()" style="width:100%; padding:10px; background:var(--primary); color:#000; border:none; border-radius:8px; font-weight:800; cursor:pointer; margin-top:6px;">সেটিংস সেভ করুন</button>
+    </div>
+  </div>
+
   <!-- Sales Ledger Modal with Excel Download -->
   <div class="modal-wrap" id="ledgerModal">
     <div class="modal-box" style="max-width: 480px;">
@@ -278,9 +326,9 @@
   <script>
     /* =======================================================
        1. IndexedDB High-Capacity Storage System
-       Allows 60-100+ images (100KB-300KB each) without quota limits
+       Allows 60-100+ images without storage quota limits
        ======================================================= */
-    const DB_NAME = "MahaPetuk_ImgDB";
+    const DB_NAME = "MahaPetuk_ImgDB_v2";
     const DB_VERSION = 1;
     let imgDb;
 
@@ -326,9 +374,16 @@
     /* =======================================================
        2. Application State & Store Configuration
        ======================================================= */
-    const STORE_KEY = "MahaPetuk_Unified_POS_v6";
+    const STORE_KEY = "MahaPetuk_Unified_POS_v7";
     const DEFAULT_DATA = {
-      upiId: "mahapetuk@upi",
+      shop: {
+        name: "মহা পেটুক",
+        loc: "আমতা সাহাপাড়া বাজার",
+        phone: "+91 98765 43210",
+        upiId: "mahapetuk@upi",
+        footer: "*** ধন্যবাদ, আবার আসবেন ***",
+        banner: ""
+      },
       menu: [
         { id: 1, name: "চিকেন চাউমিন", cat: "Chow", half: 60, full: 100, img: "" },
         { id: 2, name: "এগ চিকেন রোল", cat: "Roll", half: 0, full: 60, img: "" },
@@ -339,12 +394,13 @@
     };
 
     let posData = JSON.parse(localStorage.getItem(STORE_KEY)) || DEFAULT_DATA;
+    if (!posData.shop) posData.shop = DEFAULT_DATA.shop;
+
     let cart = [];
     let selectedSize = {};
     let currentCategory = 'ALL';
 
     function saveState() {
-      // Light metadata stored in localStorage
       localStorage.setItem(STORE_KEY, JSON.stringify(posData));
     }
 
@@ -357,10 +413,29 @@
         if (storedImg) item.img = storedImg;
       }
 
+      renderStoreHeader();
       renderTopSellingBar();
       renderCategories();
       renderApp();
       updateTodayBadge();
+    }
+
+    /* দোকান ও ব্যানার রেন্ডার */
+    function renderStoreHeader() {
+      const s = posData.shop || DEFAULT_DATA.shop;
+      document.getElementById("dispShopName").textContent = s.name || "মহা পেটুক";
+      document.getElementById("dispShopLoc").textContent = s.loc || "আমতা সাহাপাড়া বাজার";
+      document.getElementById("dispShopPhone").textContent = s.phone ? `ফোন: ${s.phone}` : "ফোন: সেট করা নেই";
+      document.getElementById("modalShopTitle").textContent = `${s.name || 'মহা পেটুক'} - মেমো কাউন্টার`;
+      document.getElementById("upiIdNote").textContent = `UPI: ${s.upiId || 'mahapetuk@upi'}`;
+
+      const bannerEl = document.getElementById("storeBannerImg");
+      if (s.banner && s.banner.length > 50) {
+        bannerEl.src = s.banner;
+        bannerEl.style.display = "inline-block";
+      } else {
+        bannerEl.style.display = "none";
+      }
     }
 
     /* সারি ১: সর্বাধিক বিক্রিত খাবার */
@@ -575,7 +650,9 @@
       qrEl.innerHTML = "";
       if (amount <= 0) return;
 
-      const upiUrl = `upi://pay?pa=${posData.upiId}&pn=MahaPetuk&am=${amount}&cu=INR`;
+      const upiId = (posData.shop && posData.shop.upiId) ? posData.shop.upiId : "mahapetuk@upi";
+      const shopName = (posData.shop && posData.shop.name) ? posData.shop.name : "MahaPetuk";
+      const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(shopName)}&am=${amount}&cu=INR`;
       new QRCode(qrEl, { text: upiUrl, width: 130, height: 130 });
     }
 
@@ -638,11 +715,13 @@
       if (!cart.length) return;
       const totalAmt = cart.reduce((s, i) => s + (i.price * i.qty), 0);
       const billBox = document.getElementById('printableThermalBill');
+      const s = posData.shop || DEFAULT_DATA.shop;
       
       billBox.innerHTML = `
         <div style="text-align:center; border-bottom:1px dashed #000; padding-bottom:4px;">
-          <h2 style="margin:0; font-size:16px;">মহা পেটুক</h2>
-          <div style="font-size:10px;">আমতা সাহাপাড়া বাজার</div>
+          <h2 style="margin:0; font-size:16px;">${s.name || 'মহা পেটুক'}</h2>
+          <div style="font-size:10px;">${s.loc || 'আমতা সাহাপাড়া বাজার'}</div>
+          ${s.phone ? `<div style="font-size:10px;">ফোন: ${s.phone}</div>` : ''}
           <div style="font-size:10px;">তারিখ: ${new Date().toLocaleDateString('bn-IN')} ${new Date().toLocaleTimeString('bn-IN')}</div>
         </div>
         <div style="margin:6px 0; border-bottom:1px dashed #000; padding-bottom:4px;">
@@ -657,7 +736,7 @@
           <span>মোট বিল:</span>
           <span>₹${totalAmt}</span>
         </div>
-        <div style="text-align:center; margin-top:8px; font-size:10px;">*** ধন্যবাদ, আবার আসবেন ***</div>
+        <div style="text-align:center; margin-top:8px; font-size:10px;">${s.footer || '*** ধন্যবাদ, আবার আসবেন ***'}</div>
       `;
 
       billBox.style.display = 'block';
@@ -672,6 +751,56 @@
       document.getElementById('badgeSalesText').textContent = `আজকের বিক্রি: ${todaySales.length} টি বিল • মোট: ₹${sum}`;
     }
 
+    /* =======================================================
+       3. Store Settings Management (সেটিংস সংরক্ষণ)
+       ======================================================= */
+    function openStoreSettings() {
+      const s = posData.shop || DEFAULT_DATA.shop;
+      document.getElementById('cfgStoreName').value = s.name || "";
+      document.getElementById('cfgStoreLoc').value = s.loc || "";
+      document.getElementById('cfgStorePhone').value = s.phone || "";
+      document.getElementById('cfgStoreUpi').value = s.upiId || "";
+      document.getElementById('cfgStoreFooter').value = s.footer || "";
+      document.getElementById('cfgBannerBase64').value = s.banner || "";
+      openModal('settingsModal');
+    }
+
+    function processBannerImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const cvs = document.createElement('canvas');
+          const MAX = 650;
+          let w = img.width, h = img.height;
+          if (w > MAX) { h = Math.round((h * MAX) / w); w = MAX; }
+          cvs.width = w; cvs.height = h;
+          cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+          document.getElementById('cfgBannerBase64').value = cvs.toDataURL('image/jpeg', 0.8);
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveStoreSettings() {
+      const name = document.getElementById('cfgStoreName').value.trim() || "মহা পেটুক";
+      const loc = document.getElementById('cfgStoreLoc').value.trim();
+      const phone = document.getElementById('cfgStorePhone').value.trim();
+      const upiId = document.getElementById('cfgStoreUpi').value.trim() || "mahapetuk@upi";
+      const footer = document.getElementById('cfgStoreFooter').value.trim() || "*** ধন্যবাদ, আবার আসবেন ***";
+      const banner = document.getElementById('cfgBannerBase64').value;
+
+      posData.shop = { name, loc, phone, upiId, footer, banner };
+      saveState();
+      renderStoreHeader();
+      closeModal('settingsModal');
+      alert("✅ দোকান ও ব্যাংকিং সেটিংস সফলভাবে সেভ হয়েছে!");
+    }
+
+    /* Sales Ledger */
     function openLedger() {
       document.getElementById('ledgerDate').value = new Date().toISOString().slice(0, 10);
       renderLedger();
@@ -715,20 +844,18 @@
       renderTopSellingBar();
     }
 
-    /* এক্সেল / CSV ডাউনলোড (তারিখ ও সময় সমেত নিখুঁত রিপোর্ট) */
     function exportToExcelCSV() {
       if (!posData.sales.length) {
         alert("ডাউনলোড করার মতো কোনো বিক্রির রেকর্ড নেই!");
         return;
       }
 
-      // UTF-8 BOM যুক্ত যাতে বাংলা লেখা এক্সেলে একদম পরিষ্কার ফুটে ওঠে
       let csvContent = "\uFEFFবিল নং,তারিখ,সময়,মোট বিল (₹),ক্যাশ (₹),অনলাইন (₹),পেমেন্ট পদ্ধতি,অর্ডার করা খাবারের তালিকা\n";
 
       posData.sales.forEach(s => {
         const d = new Date(s.date);
-        const dateStr = d.toLocaleDateString('en-GB'); // DD/MM/YYYY
-        const timeStr = d.toLocaleTimeString('en-US'); // 12-hour format with AM/PM
+        const dateStr = d.toLocaleDateString('en-GB');
+        const timeStr = d.toLocaleTimeString('en-US');
         const itemsStr = s.items.map(i => `${i.name} (${i.size === 'half' ? 'হাফ' : 'ফুল'}) x${i.qty}`).join(" | ");
 
         csvContent += `"${s.billNo}","${dateStr}","${timeStr}","${s.total}","${s.cash || 0}","${s.online || 0}","${s.mode}","${itemsStr}"\n`;
@@ -853,6 +980,7 @@
       renderManageList();
     }
 
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
     initPOS();
